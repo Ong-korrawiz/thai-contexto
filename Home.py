@@ -16,6 +16,18 @@ wv = WordVector()
 st.set_page_config(
     page_title="Home",
     page_icon="⏱️",
+    initial_sidebar_state="collapsed"
+)
+
+st.markdown(
+    """
+<style>
+    [data-testid="collapsedControl"] {
+        display: none
+    }
+</style>
+""",
+    unsafe_allow_html=True,
 )
 
 
@@ -66,19 +78,21 @@ def save_to_dataframe(input_text: str, today_word:str) -> None:
     st.session_state['data'] = st.session_state['data'].reset_index(drop=True)
     st.session_state['data'] = st.session_state['data'].drop_duplicates()
     
-    st.session_state['data'] = st.session_state['data'].sort_values(by='score', ascending=True)
+    st.session_state['data'] = st.session_state['data'].sort_values(
+        by='score', ascending=False
+        )
     st.session_state['data'] = st.session_state['data'].head(5)
 
 def submit():
+    """remove previous sumitted text"""
     st.session_state['input_text'] = st.session_state['input_box']
     st.session_state['input_box'] = ""
 
 
 def main():
-
     word_list = get_words()
     current_word = random_pick_word(word_list=word_list)
-    # Submit button 
+    # Submit button
     title = "<h1 style='text-align: center; color: #F15094;'>คอนเท็กโต้ เซินเจิ้น</h1>"
     st.markdown(title, unsafe_allow_html=True)
     st.text_input("Enter your text here:", key='input_box')
